@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+require 'kitchen_blame/cli'
+KitchenBlame::CLI.start
