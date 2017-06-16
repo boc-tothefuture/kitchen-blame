@@ -4,13 +4,13 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'kitchen_blame/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "kitchen_blame"
+  spec.name          = 'kitchen_blame'
   spec.version       = KitchenBlame::VERSION
   spec.authors       = ["Brian O'Connell"]
-  spec.email         = ["boc@us.ibm.com"]
+  spec.email         = ['boc@us.ibm.com']
 
-  spec.summary       = %q{Analyzes Test Kitchen logs to assist in optimizations.}
-  spec.description   = %q{Analyzes Test Kitchen logs to help optimize boot times, recipes, and individual resources.}
+  spec.summary       = 'Analyzes Test Kitchen logs to assist in optimizations.'
+  spec.description   = 'Analyzes Test Kitchen logs to help optimize boot times, recipes, and individual resources.'
   spec.homepage      = "TODO: Put your gem's website or public repo URL here."
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -18,19 +18,18 @@ Gem::Specification.new do |spec|
   if spec.respond_to?(:metadata)
     spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
   else
-    raise "RubyGems 2.0 or newer is required to protect against " \
-      "public gem pushes."
+    fail 'RubyGems 2.0 or newer is required to protect against ' \
+      'public gem pushes.'
   end
 
-  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
+  spec.files = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
   end
-  spec.bindir        = "exe"
-#  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
-  spec.executables   = ["blame"]
-  spec.require_paths = ["lib"]
+  spec.bindir        = 'exe'
+  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.require_paths = ['lib']
 
-  spec.add_development_dependency "bundler", "~> 1.14"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_dependency "thor"
+  spec.add_development_dependency 'bundler', '~> 1.14'
+  spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_dependency 'thor'
 end

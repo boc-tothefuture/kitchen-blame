@@ -1,10 +1,24 @@
-require "kitchen_blame/version"
+#
+# (C) Copyright IBM Corporation 2017.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+require 'kitchen_blame/version'
 require 'date'
 require 'json'
 
 module KitchenBlame
   class Blame
-
     # Return the DateTime object from a regex match with a named capture of 'time'
     def self.extract_time(match)
       time = match[:time]
@@ -15,7 +29,7 @@ module KitchenBlame
     # Return the DateTime object from a regex match with a named capture of 'time'
     def self.extract_syslog_time(entry)
       time = entry['__REALTIME_TIMESTAMP']
-      time = (time.to_f / 1000000 ).to_s
+      time = (time.to_f / 1_000_000).to_s
       DateTime.strptime(time, '%s')
     end
 
@@ -29,23 +43,22 @@ module KitchenBlame
       ((pair.last[:time] - pair.first[:time]) * 24 * 60 * 60).to_i
     end
 
-    def self.analyze_create(log)
+    def self.analyze_create(key_path, log)
       create_line = File.foreach(log).grep(/Creating/).first
       match_data = /.,\s\[(?<time>.*)\]\s+[^:]+:(?<log>.*)$/.match(create_line)
       create_time = extract_time(match_data)
-      ip = File.foreach(log).grep(/Attaching floating IP </).first[/\<(?<ip>.*)\>/,'ip']
-      server_log_entries = `ssh -i ~/.kitchen/vagrant_rsa -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no vagrant@#{ip} 'sudo journalctl -o json --no-pager' 2>/dev/null`.split("\n")
-      server_log_entries = server_log_entries.map {|entry| JSON.parse(entry) }
+      ip = File.foreach(log).grep(/Attaching floating IP </).first[/\<(?<ip>.*)\>/, 'ip']
+      server_log_entries = `ssh -i #{key_path} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no vagrant@#{ip} 'sudo journalctl -o json --no-pager' 2>/dev/null`.split("\n")
+      server_log_entries = server_log_entries.map { |entry| JSON.parse(entry) }
       boot_start = extract_syslog_time(server_log_entries.first)
-      create_duration =  measure_duration(create_time,boot_start)
+      create_duration = measure_duration(create_time, boot_start)
 
       startup_finished_entry = server_log_entries.find { |entry| entry['MESSAGE'].include?('Startup finished') }
       boot_finish = extract_syslog_time(startup_finished_entry)
-      boot_duration =  measure_duration(boot_start,boot_finish)
+      boot_duration = measure_duration(boot_start, boot_finish)
       puts "Create took #{create_duration} seconds"
       puts "Boot took #{boot_duration} seconds"
       puts "Systemd timing: #{startup_finished_entry['MESSAGE']}"
-
     end
 
     def self.analyze_recipe(log)
@@ -60,7 +73,6 @@ module KitchenBlame
         puts "#{duration} seconds for recipe #{recipe}"
       end
     end
-
 
     def self.analyze_duration(log)
       IO.readlines(log).map do |line|
