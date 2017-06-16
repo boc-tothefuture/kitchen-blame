@@ -20,16 +20,13 @@ Or install it yourself as:
 
 ## Usage
 
-
-Commands:
-  blame create LOG      - Analyze create time in a test kitchen LOG
-  
-  blame duration LOG    - Measure duration between all steps in a test kitchen LOG
-  
-  blame help [COMMAND]  - Describe available commands or one specific command
-  
-  blame recipe LOG      - Analyze recipe converge time in a test kitchen LOG
-
+```
+Commands: 
+  blame create LOG      # Analyze create time in a test kitchen LOG
+  blame duration LOG    # Measure duration between all steps in a test kitchen LOG
+  blame help [COMMAND]  # Describe available commands or one specific command
+  blame recipe LOG      # Analyze recipe converge time in a test kitchen LOG
+```
 
 ## Contributing
 
