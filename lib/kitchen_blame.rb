@@ -74,11 +74,12 @@ module KitchenBlame
     def self.analyze_recipe(log)
       recipe_lines = IO.readlines(log).grep(/Recipe:/).map do |line|
         match_data = /\[(?<time>.*)\].*Recipe:\s(?<recipe>.*)$/.match(line)
+        next unless match_data
         time = extract_time(match_data)
         recipe = match_data[:recipe]
         { recipe: recipe, time: time }
       end
-      recipe_lines.each_cons(2) do |pair|
+      recipe_lines.compact.each_cons(2) do |pair|
         recipe = pair.first[:recipe]
         duration = measure_pair(pair)
         puts "#{duration} seconds for recipe #{recipe}"
@@ -90,12 +91,12 @@ module KitchenBlame
     def self.analyze_duration(log)
       log_lines = IO.readlines(log).map do |line|
         match_data = /.,\s\[(?<time>.*)\]\s+[^:]+:(?<log>.*)$/.match(line)
-        puts match_data
+        next unless match_data
         time = extract_time(match_data)
         log = match_data[:log]
         { log: log, time: time }
       end
-      log_lines.each_cons(2) do |pair|
+      log_lines.compact.each_cons(2) do |pair|
         log = pair.first[:log]
         duration = measure_pair(pair)
         puts "#{duration} seconds for entry #{log}"
