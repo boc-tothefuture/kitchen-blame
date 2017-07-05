@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.3.0] - 2017-07-06
+### Added
+- Join log path with default kitchen log path when necessary
+
 ## [0.2.0] - 2017-07-05
 ### Added
 - version subcommand

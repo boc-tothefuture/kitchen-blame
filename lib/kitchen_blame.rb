@@ -16,10 +16,13 @@
 require 'kitchen_blame/version'
 require 'date'
 require 'json'
+require 'pathname'
 
 module KitchenBlame
   # Main class
   class Blame
+    LOG_DIR = (Pathname.getwd + Pathname.new('.kitchen/logs')).freeze
+
     # Return the DateTime object from a regex match with a named capture of 'time'
     def self.extract_time(match)
       time = match[:time]
@@ -44,7 +47,17 @@ module KitchenBlame
       ((pair.last[:time] - pair.first[:time]) * 24 * 60 * 60).to_i
     end
 
+    # Determine the appropriate log file or raise an error
+    def self.resolve_log(log)
+      log_path = Pathname.new(log)
+      return log_path.to_path if log_path.exist? && log_path.file?
+      log_path = LOG_DIR + log_path
+      fail "Unable to fully qualify or find test kitchen log #{log}" unless log_path.exist? && log_path.file?
+      log_path.to_path
+    end
+
     def self.analyze_create(key_path, log)
+      log = resolve_log(log)
       server_log_entries = server_log_entries(key_path, log)
       create_duration = image_create(log, server_log_entries)
       startup_finished_entry = server_log_entries.find { |entry| entry['MESSAGE'].include?('Startup finished') }
@@ -72,6 +85,7 @@ module KitchenBlame
 
     # rubocop:disable MethodLength
     def self.analyze_recipe(log)
+      log = resolve_log(log)
       recipe_lines = IO.readlines(log).grep(/Recipe:/).map do |line|
         match_data = /\[(?<time>.*)\].*Recipe:\s(?<recipe>.*)$/.match(line)
         next unless match_data
@@ -89,6 +103,7 @@ module KitchenBlame
 
     # rubocop:disable MethodLength
     def self.analyze_duration(log)
+      log = resolve_log(log)
       log_lines = IO.readlines(log).map do |line|
         match_data = /.,\s\[(?<time>.*)\]\s+[^:]+:(?<log>.*)$/.match(line)
         next unless match_data
