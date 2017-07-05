@@ -52,8 +52,11 @@ module KitchenBlame
       log_path = Pathname.new(log)
       return log_path.to_path if log_path.exist? && log_path.file?
       log_path = LOG_DIR + log_path
-      fail "Unable to fully qualify or find test kitchen log #{log}" unless log_path.exist? && log_path.file?
-      log_path.to_path
+      return log_path.to_path if log_path.exist? && log_path.file?
+      LOG_DIR.each_child.select(&:file?).each do |log_dir_entry|
+        return log_dir_entry.to_path if log_dir_entry.basename.fnmatch("*#{log}*")
+      end
+      fail "Unable to fully qualify or find test kitchen log #{log}"
     end
 
     def self.analyze_create(key_path, log)
