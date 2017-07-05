@@ -17,6 +17,7 @@ require 'thor'
 require 'kitchen_blame'
 
 module KitchenBlame
+  # Processes command line invocation
   class CLI < Thor
     desc 'create KEY LOG', 'Use ssh KEY to analyze create time in a test kitchen LOG'
     def create(key, log)
@@ -31,6 +32,11 @@ module KitchenBlame
     desc 'duration LOG', 'Measure duration between all steps in a test kitchen LOG'
     def duration(log)
       KitchenBlame::Blame.analyze_duration(log)
+    end
+
+    desc 'version', 'Output kitchen blame version'
+    def version
+      puts "kitchen blame version: #{KitchenBlame::VERSION}"
     end
   end
 end
