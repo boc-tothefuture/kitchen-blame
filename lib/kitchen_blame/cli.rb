@@ -38,5 +38,11 @@ module KitchenBlame
     def version
       puts "kitchen blame version: #{KitchenBlame::VERSION}"
     end
+
+    desc 'list', 'List available logs to analyze'
+    method_option :log_dir, default: KitchenBlame::Blame::LOG_DIR.to_s, desc: 'Directory to look for kitchen logs.  Defaults to .kitchen/logs'
+    def list
+      KitchenBlame::Blame.list(options[:log_dir])
+    end
   end
 end

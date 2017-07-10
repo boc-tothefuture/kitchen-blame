@@ -47,6 +47,14 @@ module KitchenBlame
       ((pair.last[:time] - pair.first[:time]) * 24 * 60 * 60).to_i
     end
 
+    def self.list(dir)
+      Pathname.new(dir).each_child.select(&:file?).each do |log_dir_entry|
+        next if log_dir_entry.basename.to_s == 'kitchen.log'
+        next unless log_dir_entry.extname == '.log'
+        puts log_dir_entry.basename('.log')
+      end
+    end
+
     # Determine the appropriate log file or raise an error
     def self.resolve_log(log)
       log_path = Pathname.new(log)
