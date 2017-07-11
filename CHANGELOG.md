@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 -
 
-## [0.5.0]
+## [0.5.1] - 2017-07-12
+### Fixed
+- Error if default kitchen log dir does not exist
+
+## [0.5.0] - 2017-07-11
 ### Added
 - New list command to show available logs for analysis.
 

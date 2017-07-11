@@ -48,6 +48,7 @@ module KitchenBlame
     end
 
     def self.list(dir)
+      return unless File.exist? dir
       Pathname.new(dir).each_child.select(&:file?).each do |log_dir_entry|
         next if log_dir_entry.basename.to_s == 'kitchen.log'
         next unless log_dir_entry.extname == '.log'
