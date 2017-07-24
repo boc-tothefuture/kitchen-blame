@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 -
 
+## [0.6.0] - 2017-07-24
+### Added
+- User friendly error message if specified log doesn't exit and default log dir is missing
+
 ## [0.5.1] - 2017-07-12
 ### Fixed
 - Error if default kitchen log dir does not exist

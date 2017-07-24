@@ -62,6 +62,7 @@ module KitchenBlame
       return log_path.to_path if log_path.exist? && log_path.file?
       log_path = LOG_DIR + log_path
       return log_path.to_path if log_path.exist? && log_path.file?
+      fail "#{LOG_DIR} does not exist.  Cannot find log file matching '#{log}'" unless LOG_DIR.exist?
       LOG_DIR.each_child.select(&:file?).each do |log_dir_entry|
         return log_dir_entry.to_path if log_dir_entry.basename.fnmatch("*#{log}*")
       end
