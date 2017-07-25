@@ -66,6 +66,10 @@ module KitchenBlame
       LOG_DIR.each_child.select(&:file?).each do |log_dir_entry|
         return log_dir_entry.to_path if log_dir_entry.basename.fnmatch("*#{log}*")
       end
+      if log == 'latest'
+        latest = LOG_DIR.each_child.select(&:file?).sort_by(&:mtime).last
+        return latest if latest
+      end
       fail "Unable to fully qualify or find test kitchen log #{log}"
     end
 
