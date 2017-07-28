@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 -
 
+## [0.7.1] - 2017-07-28
+### Fixed
+- Padding to properly align text
+
 ## [0.7.0] - 2017-07-25
 ### Added
 - If specified log match is the term 'latest' analyze the most recent log

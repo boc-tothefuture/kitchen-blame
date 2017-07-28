@@ -110,10 +110,11 @@ module KitchenBlame
         recipe = match_data[:recipe]
         { recipe: recipe, time: time }
       end
+      max_duration = recipe_lines.compact.each_cons(2).map {|pair| measure_pair(pair)}.max
       recipe_lines.compact.each_cons(2) do |pair|
         recipe = pair.first[:recipe]
         duration = measure_pair(pair)
-        puts "#{duration} seconds for recipe #{recipe}"
+        puts "#{duration.to_s.ljust(max_duration.to_s.length)} seconds for recipe #{recipe}"
       end
     end
     # rubocop:enable MethodLength
@@ -128,10 +129,12 @@ module KitchenBlame
         log = match_data[:log]
         { log: log, time: time }
       end
+      max_duration = log_lines.compact.each_cons(2).map {|pair| measure_pair(pair)}.max
+      puts max_duration
       log_lines.compact.each_cons(2) do |pair|
         log = pair.first[:log]
         duration = measure_pair(pair)
-        puts "#{duration} seconds for entry #{log}"
+        puts "#{duration.to_s.ljust(max_duration.to_s.length)} seconds for entry #{log}"
       end
     end
     # rubocop:enable MethodLength
